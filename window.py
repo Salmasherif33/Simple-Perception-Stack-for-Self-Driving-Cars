@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+import cv2 as cv
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
@@ -30,9 +30,9 @@ def slide_window(binary_warped, histogram):
         win_xleft_high = leftx_current + margin
         win_xright_low = rightx_current - margin
         win_xright_high = rightx_current + margin
-        cv2.rectangle(out_img,(win_xleft_low,win_y_low),(win_xleft_high,win_y_high),
+        cv.rectangle(out_img,(win_xleft_low,win_y_low),(win_xleft_high,win_y_high),
         (0,255,0), 2)
-        cv2.rectangle(out_img,(win_xright_low,win_y_low),(win_xright_high,win_y_high),
+        cv.rectangle(out_img,(win_xright_low,win_y_low),(win_xright_high,win_y_high),
         (0,255,0), 2)
         good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
         (nonzerox >= win_xleft_low) &  (nonzerox < win_xleft_high)).nonzero()[0]

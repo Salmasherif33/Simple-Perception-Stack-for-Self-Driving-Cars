@@ -28,6 +28,7 @@ def threshold(img):
 def canny(img):
     img = grayscale(img)
     img = cv.Canny(img,150,200, L2gradient = True) 
+    #img = threshold(img)
     return img
 
 

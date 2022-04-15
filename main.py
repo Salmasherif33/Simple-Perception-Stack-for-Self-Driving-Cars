@@ -7,8 +7,8 @@ import glob
 import matplotlib.pyplot as plt
 from edge_detection import canny
 from bird_eye import final_bird
-from window import slide_window
-
+from window import *
+from lane_detection import *
 
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
@@ -35,16 +35,11 @@ def main():
                 output_img = canny(frame)
             elif(stages==2):
                 output_img = canny(frame)
-                warped,histogram = final_bird(output_img)
+                warped,histogram,Minv = final_bird(output_img)
                 ploty,left_fitx,right_fitx, left_fit, right_fit,out_img = slide_window(warped, histogram)
-                out_img = warped     #only for temp view
-            elif (stages==3):
-                ##TODO:: lane detection on the straight lane
-            elif(stages==4):
-                ##TODO:: show lane detection + vehicle position + curvature radius 
-            
 
-            cv.imshow('Output_Video',warped)
+                result = draw_lane(frame,output_img,left_fit,right_fit,Minv)
+            cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
             if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
                 break
@@ -55,8 +50,9 @@ def main():
 
     elif (type_ == "img"):
         img = cv.imread(path)
-        img = canny(img)
-        output_img,histogram = final_bird(img)
+        #img = canny(img)
+        output_img = lane_line_markings(img)
+        #output_img,histogram = final_bird(img)
         cv.imshow('Output Image',output_img)
         cv.waitKey(0)
 
