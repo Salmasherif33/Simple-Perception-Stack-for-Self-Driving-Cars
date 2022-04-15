@@ -28,11 +28,8 @@ def threshold(img):
 def canny(img):
     img = grayscale(img)
     img = cv.Canny(img,150,200, L2gradient = True) 
-    h = img.shape[0]
-    w = img.shape[1]
-    (cX, cY) = (w // 4 , h )
-    img[0:cY , 0:cX] = 0 ##hard-setting all values at this rectangle to be zeroes 
-    img[0:h , w-cX:w] = 0 ##hard-setting all values at this rectangle to be zeroes 
+
+    
     #img = threshold(img)
     return img
 
