@@ -30,8 +30,9 @@ def warp(img):
     h = binary_warped.shape[0]
     w = binary_warped.shape[1]
     (cX, cY) = (w // 5, h )
-    binary_warped[0:cY , 0:cX] = 0 ##hard-setting all values at this rectangle to be zeroes 
-    binary_warped[0:h , w-cX:w] = 0 ##hard-setting all values at this rectangle to be zeroes 
+    binary_warped[0:cY , 0:cX+30] = 0 ##hard-setting all values at this rectangle to be zeroes 
+    binary_warped[0:h , w-cX-100:w] = 0 ##hard-setting all values at this rectangle to be zeroes 
+    binary_warped[0:h//5 , 0:w] = 0
     binary_warped[0:h , int(h/2-h/10):int(h/2+h/10)]=0
 
     return binary_warped, Minv

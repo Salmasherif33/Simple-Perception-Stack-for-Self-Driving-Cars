@@ -27,7 +27,7 @@ def threshold(img):
 
 def canny(img):
     img = grayscale(img)
-    img = cv.Canny(img,0,255, L2gradient = True) 
+    img = cv.Canny(img,150,200, L2gradient = True) 
     h = img.shape[0]
     w = img.shape[1]
     (cX, cY) = (w // 4 , h )
