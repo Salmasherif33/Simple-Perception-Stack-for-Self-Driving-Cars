@@ -37,8 +37,9 @@ def main():
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 ploty,left_fitx,right_fitx, left_fit, right_fit,out_img = slide_window(warped, histogram)
-
+                #result = lane_line_markings(frame)
                 result = draw_lane(frame,output_img,left_fit,right_fit,Minv)
+                
             cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
             if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e

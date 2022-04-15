@@ -29,10 +29,10 @@ def warp(img):
     ## HACKY way to make a black left vertical rectangle to eliminate the bad lines ##
     h = binary_warped.shape[0]
     w = binary_warped.shape[1]
-    (cX, cY) = (w // 10 , h )
+    (cX, cY) = (w // 5, h )
     binary_warped[0:cY , 0:cX] = 0 ##hard-setting all values at this rectangle to be zeroes 
-
-
+    binary_warped[0:h , w-cX:w] = 0 ##hard-setting all values at this rectangle to be zeroes 
+    binary_warped[0:h , int(h/2-h/10):int(h/2+h/10)]=0
 
     return binary_warped, Minv
 
