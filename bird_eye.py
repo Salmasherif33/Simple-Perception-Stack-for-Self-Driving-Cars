@@ -16,7 +16,7 @@ def warp(img):
             [600, 470],  # Top-left corner
             [300, 660],  # Bottom-left corner
             [1050, 684],  # Bottom-right corner
-            [720, 470]  # Top-right corner
+            [725, 470]  # Top-right corner
         ])
 
     padding = int(0.20 * width)

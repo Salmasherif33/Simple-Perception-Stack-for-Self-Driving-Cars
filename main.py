@@ -9,7 +9,8 @@ from edge_detection import canny
 from bird_eye import final_bird
 from window import *
 from lane_detection import *
-
+from last_overlay import overlay
+from calculations import radius_and_center
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
     try:
@@ -37,6 +38,10 @@ def main():
             elif(stages==2):
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
+                left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out =sliding_window_polyfit(frame,warped)                
+                result = draw_lane(frame,output_img,left_fit,right_fit,Minv)   
+                radius , offset = radius_and_center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
+                result = overlay(radius, offset,result,slid_out)
                 
                 left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
                 
