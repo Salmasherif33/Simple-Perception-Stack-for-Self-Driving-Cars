@@ -33,12 +33,15 @@ def main():
         while istrue:
             if (stages == 1):
                 output_img = canny(frame)
+                
             elif(stages==2):
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 
-                left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out =sliding_window_polyfit(frame,warped)
+                left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
                 
+                left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
+                print(left_curvem, 'm', right_curvem, 'm')
                 result = draw_lane(frame,output_img,left_fit,right_fit,Minv)     
             
             cv.imshow('input_Video',slid_out)        
@@ -60,10 +63,12 @@ def main():
         warped,histogram,Minv = final_bird(output_img)
         left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out =sliding_window_polyfit(img,warped)
         result = draw_lane(img,output_img,left_fit,right_fit,Minv)        
-        cv.imshow('warped',warped)   
+        """ cv.imshow('warped',warped)   
         cv.imshow('sliding window',result)
         #cv.imshow('Output Image',result)
-        cv.waitKey(0)
+        cv.waitKey(0) """
+        plt.imshow( warped)
+        plt.show()
 
 
 
