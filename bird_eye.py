@@ -23,8 +23,8 @@ def warp(img):
 
     dst = np.float32(
         [
-            [padding+30,50],                # Top-left corner
-            [padding+30,height ],           # Bottom-left corner
+            [padding+30,100],                # Top-left corner
+            [padding+30,height -10],           # Bottom-left corner
             [width - (padding+120), height],   # Bottom-right corner#
             [width - (padding+120),50]        # Top-right corner
         ])
@@ -38,7 +38,7 @@ def warp(img):
     h = binary_warped.shape[0]
     w = binary_warped.shape[1]
     (cX, cY) = (w // 5, h )
-    binary_warped[0:cY , 0:cX+20] = 0 ##hard-setting all values at this rectangle to be zeroes 
+    #binary_warped[0:cY , 0:cX] = 0 ##hard-setting all values at this rectangle to be zeroes 
     binary_warped[0:h , w-cX-70:w] = 0 ##hard-setting all values at this rectangle to be zeroes 
 
 

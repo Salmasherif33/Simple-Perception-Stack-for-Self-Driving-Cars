@@ -1,83 +1,55 @@
-#!/usr/bin/python
-
-import sys
-import cv2 as cv
 import numpy as np
-import glob
+import cv2 as cv
 import matplotlib.pyplot as plt
-from edge_detection import canny
-from bird_eye import *
-from window import *
-from lane_detection import *
-
-def main():
-    #usage: type(vid/img) PATH(relative or absolute)
-    try:
-        type_ = sys.argv[1]
-        path = sys.argv[2]
-        stages = int(sys.argv[3])
-    except:
-        if(len(sys.argv) < 4):
-            print("USAGE:python3 main.py type(vid/img) PATH <stageNO(1..5)>")
-            return 1
-
-
-    if(type_ == "vid"):
-        cv.waitKey(0)
-        capture = cv.VideoCapture(path)
-
-
-
-        istrue, frame = capture.read()      #istrue = true if there is a frame
-        
-        while istrue:
-            if (stages == 1):
-                output_img = canny(frame)
-                result = output_img
-            elif(stages==2):
-                output_img = canny(frame)
-                warped,histogram,Minv = final_bird(output_img)
-                #result = bird_view_markings(warped)
-                """
-                # Getting the left lane from the 1st sliding window fn and the right one from the second
-                # bad bad idea but works :)
-                """
-
-                ploty,left_fitx,s1_right_fitx, s1_left_fit, s1_right_fit,out_img = slide_window(warped, histogram)
-                s2_left_fit, s2_right_fit, s2_left_lane_inds, s2_right_lane_inds, s2_visualization_data, slid_out =sliding_window_polyfit(frame,warped)
-                
-                result = draw_lane(frame,output_img,s1_left_fit,s2_right_fit,Minv)     
-            
-            #cv.imshow('input_Video',out_img)        
-            cv.imshow('Output_Video',result)
-            istrue, frame = capture.read()      #istrue = true if there is a frame
-            if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
-                break
-
-
-       
-
-
-    elif (type_ == "img"):
-        img = cv.imread(path)
-        #img = canny(img)
-        #output_img = lane_line_markings(img)
-        #output_img,histogram = final_bird(img)
-        output_img = canny(img)
-        #output_img = lane_line_markings(output_img)
-        """ warped,histogram,Minv = final_bird(output_img)
-        ploty,left_fitx,s1_right_fitx, s1_left_fit, s1_right_fit,out_img = slide_window(warped, histogram)
-        s2_left_fit, s2_right_fit, s2_left_lane_inds, s2_right_lane_inds, s2_visualization_data, slid_out =sliding_window_polyfit(img,warped)
-        result = draw_lane(img,output_img,s1_left_fit,s2_right_fit,Minv)      """   
-        warped,histogram,Minv = final_bird(output_img)
-        #plt.imshow(warped)   
-        plt.plot(histogram)
-        #cv.imshow('sliding window',result)
-        #cv.imshow('Output Image',result)
-        plt.show()
+import matplotlib.image as mpimg
 
 
 
 
-if __name__== "__main__":
-    main()
+def lane_line_markings(img):
+    src = np.float32(
+        [
+            (572, 454),  # Top-left corner
+            (250, 660),  # Bottom-left corner
+            (1100, 684),  # Bottom-right corner
+            (734, 454)  # Top-right corner
+        ])
+
+    detected_plot = cv.polylines(np.copy(img), np.int32([
+        src]), True, (147, 20, 255), 3)
+
+    return detected_plot
+
+
+
+def draw_lane(original_img, binary_img, l_fit, r_fit, Minv):
+    #temp = binary_img[200:700  , 180:1200]
+    #binary_img = cv.matchTemplate(binary_img,temp,cv.TM_CCOEFF_NORMED)
+    new_img = np.copy(original_img)
+    if l_fit is None or r_fit is None:
+        return original_img
+    # Create an image to draw the lines on
+    warp_zero = np.zeros_like(binary_img).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+    
+    h,w = binary_img.shape
+    ploty = np.linspace(0, h-1, num=h)# to cover same y-range as image
+    left_fitx = l_fit[0]*ploty**2 + l_fit[1]*ploty + l_fit[2]
+    right_fitx = r_fit[0]*ploty**2 + r_fit[1]*ploty + r_fit[2]
+
+    # Recast the x and y points into usable format for cv.fillPoly()
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+
+    ## Draw the using poly lines ##
+
+    cv.fillPoly(color_warp, np.int_([pts]), (255,255, 0))
+    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,255,255), thickness=15)
+    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(0,255,255), thickness=15)
+
+    # Warp perspective using given using Minv 
+    newwarp = cv.warpPerspective(color_warp, Minv, (w, h)) 
+    # Combine the result with the original image
+    result = cv.addWeighted(new_img, 1, newwarp, 0.5, 0)
+    return result

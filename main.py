@@ -37,17 +37,11 @@ def main():
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 
-                """
-                # Getting the left lane from the 1st sliding window fn and the right one from the second
-                # bad bad idea but works :)
-                """
-
-                ploty,left_fitx,s1_right_fitx, s1_left_fit, s1_right_fit,out_img = slide_window(warped, histogram)
-                s2_left_fit, s2_right_fit, s2_left_lane_inds, s2_right_lane_inds, s2_visualization_data, slid_out =sliding_window_polyfit(frame,warped)
+                left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out =sliding_window_polyfit(frame,warped)
                 
-                result = draw_lane(frame,output_img,s1_left_fit,s2_right_fit,Minv)     
+                result = draw_lane(frame,output_img,left_fit,right_fit,Minv)     
             
-            cv.imshow('input_Video',out_img)        
+            cv.imshow('input_Video',slid_out)        
             cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
             if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
@@ -64,9 +58,8 @@ def main():
         #output_img,histogram = final_bird(img)
         output_img = canny(img)
         warped,histogram,Minv = final_bird(output_img)
-        ploty,left_fitx,s1_right_fitx, s1_left_fit, s1_right_fit,out_img = slide_window(warped, histogram)
-        s2_left_fit, s2_right_fit, s2_left_lane_inds, s2_right_lane_inds, s2_visualization_data, slid_out =sliding_window_polyfit(img,warped)
-        result = draw_lane(img,output_img,s1_left_fit,s2_right_fit,Minv)        
+        left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out =sliding_window_polyfit(img,warped)
+        result = draw_lane(img,output_img,left_fit,right_fit,Minv)        
         cv.imshow('warped',warped)   
         cv.imshow('sliding window',result)
         #cv.imshow('Output Image',result)
