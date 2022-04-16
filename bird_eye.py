@@ -8,18 +8,26 @@ import glob
 def warp(img):
     img_size = (img.shape[1], img.shape[0])
     line_dst_offset = 200   #to bring left/right lines closer to each other (curves)
-    img_size = (img.shape[1], img.shape[0])
+    width = img.shape[1]
+    height = img.shape[0]
+    padding = int(0.33 * width)
     src = np.float32(
-        [[595, 452],
-          [685, 452],
-          [1110, img.shape[0]],
-          [220, img.shape[0]]])
+        [
+            [600, 470],  # Top-left corner
+            [300, 660],  # Bottom-left corner
+            [1050, 684],  # Bottom-right corner
+            [720, 470]  # Top-right corner
+        ])
+
+    padding = int(0.20 * width)
 
     dst = np.float32(
-        [[src[3][0]+line_dst_offset, 0],
-          [src[2][0] - line_dst_offset, 0],
-          [src[2][0] - line_dst_offset, src[2][1]],
-          [src[3][0]+ line_dst_offset, src[3][1] ]])
+        [
+            [padding+30,50],                # Top-left corner
+            [padding+30,height ],           # Bottom-left corner
+            [width - (padding+120), height],   # Bottom-right corner#
+            [width - (padding+120),50]        # Top-right corner
+        ])
 
 
     M = cv.getPerspectiveTransform(src, dst)
@@ -46,15 +54,16 @@ def get_histogram(binary_warped):
 def bird_view_markings(img):
     width = img.shape[1]
     height = img.shape[0]
-    padding = int(0.25 * width)
+    padding = int(0.20 * width)
 
     dst = np.float32(
         [
-            [padding,0],                # Top-left corner
-            [padding,height],           # Bottom-left corner
-            [width - padding, height],   # Bottom-right corner#
-            [width - padding, 0]        # Top-right corner
+            [padding+30,50],                # Top-left corner
+            [padding+30,height ],           # Bottom-left corner
+            [width - (padding+120), height],   # Bottom-right corner#
+            [width - (padding+120),50]        # Top-right corner
         ])
+
 
     detected_plot = cv.polylines(np.copy(img), np.int32([
         dst]), True, (147, 20, 255), 3)
