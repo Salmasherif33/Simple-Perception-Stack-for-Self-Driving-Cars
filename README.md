@@ -12,6 +12,10 @@ different options to show outputs at different stages could be used:
 
 4: full pipeline
 
+5: Radius of curvature 
+
+6: Center offset
+
 ------------------------------------------------------------------------------------------------
 
 To show bird-view for an image 
