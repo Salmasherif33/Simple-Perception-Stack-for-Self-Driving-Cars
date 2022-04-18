@@ -107,4 +107,9 @@ def sliding_window_polyfit(exampleImg,img):
     nonzerox = np.array(nonzero[1])
     out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0]
     out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [100, 200, 255]
-    return left_fit, right_fit, left_lane_inds, right_lane_inds, visualization_data , out_img
+    return left_fit, right_fit, left_lane_inds, right_lane_inds, visualization_data , out_img,ploty, leftx, lefty,rightx,righty
+
+
+
+
+
