@@ -13,7 +13,7 @@ def rescale(img,scale):
 
     return cv.resize(img,dimensions, interpolation=cv.INTER_AREA)
 
-def overlay(text1,text2 , img ,slid_out):
+def overlay(text1,text2 , img ,bird_draw,slid_out):
     origin1 = (50,50)
     origin2 = (50,100)
     font = cv.FONT_HERSHEY_SIMPLEX
@@ -23,9 +23,14 @@ def overlay(text1,text2 , img ,slid_out):
     img = cv.putText(img , text1 , origin1, font , fonts , color , thick)
     img = cv.putText(img , text2 , origin2, font , fonts , color , thick)
     
+    bird_draw = rescale(bird_draw, 0.2)
+    x_offset= int(img.shape[0]) + 20
+    y_offset=20
+    img[y_offset:y_offset+bird_draw.shape[0], x_offset:x_offset+bird_draw.shape[1]] = bird_draw
+
+
+
     slid_out = rescale(slid_out, 0.2)
-    #small_w = int(slid_out.shape[1])
-    #small_h=  int(slid_out.shape[0])
     x_offset= int(img.shape[0]) + 300
     y_offset=20
     img[y_offset:y_offset+slid_out.shape[0], x_offset:x_offset+slid_out.shape[1]] = slid_out

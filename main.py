@@ -38,10 +38,12 @@ def main():
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out =sliding_window_polyfit(frame,warped)                
+                bird_draw = bird_draw_lane(warped,left_fit,right_fit)
+                
                 result = draw_lane(frame,output_img,left_fit,right_fit,Minv)   
                 radius , offset = radius_and_center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
-                result = overlay(radius, offset,result,slid_out)
-                
+                result = overlay(radius, offset,result,bird_draw,slid_out)
+            
                 
             #cv.imshow('input_Video',slid_out)        
             cv.imshow('Output_Video',result)

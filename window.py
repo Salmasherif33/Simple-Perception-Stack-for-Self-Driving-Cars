@@ -23,7 +23,7 @@ def sliding_window_polyfit(exampleImg,img):
     #print('base pts:', leftx_base, rightx_base)
 
     # Choose the number of sliding windows
-    nwindows = 30
+    nwindows = 10
     # Set height of windows
     window_height = np.int(img.shape[0]/nwindows)
     # Identify the x and y positions of all nonzero pixels in the image
