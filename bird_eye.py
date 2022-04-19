@@ -60,7 +60,7 @@ def bird_view_markings(img):
         [
             [padding+30,50],                # Top-left corner
             [padding+30,height ],           # Bottom-left corner
-            [width - (padding+120), height],   # Bottom-right corner#
+            [width - (padding+100), height],   # Bottom-right corner#
             [width - (padding+120),50]        # Top-right corner
         ])
 

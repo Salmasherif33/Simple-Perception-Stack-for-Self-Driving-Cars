@@ -35,8 +35,8 @@ def bird_draw_lane(binary_img, l_fit, r_fit):
     pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
     pts = np.hstack((pts_left, pts_right))
     cv.fillPoly(color_warp, np.int_([pts]), (255,255, 0))
-    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,255,255), thickness=5)
-    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(0,255,255), thickness=5)
+    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,0,255), thickness=15)
+    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(255,0,0), thickness=15)
     return color_warp
 
 
@@ -63,8 +63,8 @@ def draw_lane(original_img, binary_img, l_fit, r_fit, Minv):
     ## Draw the using poly lines ##
 
     cv.fillPoly(color_warp, np.int_([pts]), (255,255, 0))
-    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,255,255), thickness=15)
-    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(0,255,255), thickness=15)
+    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,0,255), thickness=15)
+    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(255,0,0), thickness=15)
 
     # Warp perspective using given using Minv 
     newwarp = cv.warpPerspective(color_warp, Minv, (w, h)) 

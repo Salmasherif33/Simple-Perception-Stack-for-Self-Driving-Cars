@@ -4,25 +4,15 @@
 
 different options to show outputs at different stages could be used:
 
-1: canny
 
-2: bird-view
-
-3: horizontal-line detection
-
-4: full pipeline
-
-5: Radius of curvature 
-
-6: Center offset
 
 ------------------------------------------------------------------------------------------------
 
-To show bird-view for an image 
+To view video in debug mode
 
-`python3 main.py img data_input/test_images/test1.jpg 2`
+`sh runme.sh data_input/challenge_video.mp4 /home/usr/Desktop/output_file/out.mp4 --debug_mode 1`
 
-To show bird-view for a video
+To view final video output
 
-`python3 main.py vid data_input/project_video.mp4 2`
+`sh runme.sh data_input/challenge_video.mp4 /home/usr/Desktop/output_file/out.mp4 --debug_mode 0`
 
