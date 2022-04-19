@@ -10,7 +10,7 @@ def warp(img):
     line_dst_offset = 200   #to bring left/right lines closer to each other (curves)
     width = img.shape[1]
     height = img.shape[0]
-    padding = int(0.25 * width)
+   
     src = np.float32(
         [
             [600, 470],  # Top-left corner
@@ -50,7 +50,7 @@ def get_histogram(binary_warped):
     return histogram
 
 
-
+#function to draw a red polygon around the lanes in the bird  eye view
 def bird_view_markings(img):
     width = img.shape[1]
     height = img.shape[0]
@@ -58,13 +58,13 @@ def bird_view_markings(img):
 
     dst = np.float32(
         [
-            [padding+30,50],                # Top-left corner
-            [padding+30,height ],           # Bottom-left corner
-            [width - (padding+100), height],   # Bottom-right corner#
-            [width - (padding+120),50]        # Top-right corner
+            [padding - 90,10],                # Top-left corner
+            [padding-90,height -30],           # Bottom-left corner
+            [width - (padding+50), height-30],   # Bottom-right corner#
+            [width - (padding+50),10]        # Top-right corner
         ])
 
-
+ 
     detected_plot = cv.polylines(np.copy(img), np.int32([
         dst]), True, (147, 20, 255), 3)
 
