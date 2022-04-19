@@ -6,7 +6,7 @@ import numpy as np
 import glob
 import matplotlib.pyplot as plt
 from edge_detection import canny
-from bird_eye import final_bird
+from bird_eye import *
 from window import *
 from lane_detection import *
 from last_overlay import overlay
@@ -46,7 +46,7 @@ def main():
                 left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
               
                 result = overlay(left_curvem,right_curvem, offset,result,bird_draw,slid_out)
-                
+                result = bird_view_markings(warped)
             #cv.imshow('input_Video',slid_out)        
             cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
