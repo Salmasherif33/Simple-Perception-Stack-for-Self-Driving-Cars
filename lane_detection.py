@@ -27,6 +27,24 @@ def lane_line_markings(img):
     return detected_plot
 
 
+def bird_draw_lane(binary_img, l_fit, r_fit):
+    new_img = np.copy(binary_img)
+    if l_fit is None or r_fit is None:
+        return binary_img
+    warp_zero = np.zeros_like(binary_img).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+    h,w = binary_img.shape
+    ploty = np.linspace(0, h-1, num=h)# to cover same y-range as image
+    left_fitx = l_fit[0]*ploty**2 + l_fit[1]*ploty + l_fit[2]
+    right_fitx = r_fit[0]*ploty**2 + r_fit[1]*ploty + r_fit[2]
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+    cv.fillPoly(color_warp, np.int_([pts]), (255,255, 0))
+    cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,255,255), thickness=5)
+    cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(0,255,255), thickness=5)
+    return color_warp
+
 
 def draw_lane(original_img, binary_img, l_fit, r_fit, Minv):
     #temp = binary_img[200:700  , 180:1200]
@@ -50,7 +68,7 @@ def draw_lane(original_img, binary_img, l_fit, r_fit, Minv):
 
     ## Draw the using poly lines ##
 
-    cv.fillPoly(color_warp, np.int_([pts]), (0,255, 0))
+    cv.fillPoly(color_warp, np.int_([pts]), (255,255, 0))
     cv.polylines(color_warp, np.int32([pts_left]), isClosed=False, color=(0,255,255), thickness=15)
     cv.polylines(color_warp, np.int32([pts_right]), isClosed=False, color=(0,255,255), thickness=15)
 

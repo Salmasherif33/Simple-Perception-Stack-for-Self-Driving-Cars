@@ -9,7 +9,8 @@ from edge_detection import *
 from bird_eye import final_bird
 from window import *
 from lane_detection import *
-
+from last_overlay import overlay
+from calculations import *
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
     try:
@@ -32,18 +33,30 @@ def main():
         
         while istrue:
             if (stages == 1):
+<<<<<<< HEAD
                 output_img = lane_line_markings(np.copy(frame))
                 result = output_img
             elif (stages == 2):
                 output_img = canny(frame,s_thresh=(100, 255), l_thresh=(120, 255))
                 result = output_img
             elif(stages==3):
+=======
+                output_img = canny(frame)
+                
+            elif(stages==2):
+>>>>>>> 66ed4ab0c0e658fac58f3acbd38bc1e99630db9d
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
-                ploty,left_fitx,right_fitx, left_fit, right_fit,out_img = slide_window(warped, histogram)
-                #result = lane_line_markings(frame)
-                result = draw_lane(frame,output_img,left_fit,right_fit,Minv)
+                left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
+                bird_draw = bird_draw_lane(warped,left_fit,right_fit)
+                result = draw_lane(frame,output_img,left_fit,right_fit,Minv)   
+                offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
                 
+                left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
+              
+                result = overlay(left_curvem,right_curvem, offset,result,bird_draw,slid_out)
+                
+            #cv.imshow('input_Video',slid_out)        
             cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
             if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
@@ -56,10 +69,18 @@ def main():
     elif (type_ == "img"):
         img = cv.imread(path)
         #img = canny(img)
-        output_img = lane_line_markings(img)
+        #output_img = lane_line_markings(img)
         #output_img,histogram = final_bird(img)
-        cv.imshow('Output Image',output_img)
-        cv.waitKey(0)
+        output_img = canny(img)
+        warped,histogram,Minv = final_bird(output_img)
+        left_fit,right_fit,left_lane_inds, right_lane_inds, visualization_data, slid_out =sliding_window_polyfit(img,warped)
+        result = draw_lane(img,output_img,left_fit,right_fit,Minv)        
+        """ cv.imshow('warped',warped)   
+        cv.imshow('sliding window',result)
+        #cv.imshow('Output Image',result)
+        cv.waitKey(0) """
+        plt.imshow( warped)
+        plt.show()
 
 
 
