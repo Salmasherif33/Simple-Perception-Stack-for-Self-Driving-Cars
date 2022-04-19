@@ -15,6 +15,11 @@ def lane_line_markings(img):
             (740, 480)  # Top-right corner
         ])
 
+    """   (572, 454),  # Top-left corner
+            (330, 660),  # Bottom-left corner
+            (1100, 684),  # Bottom-right corner
+            (690, 454)  # Top-right corner """
+
     detected_plot = cv.polylines(np.copy(img), np.int32([
         src]), True, (147, 20, 255), 3)
 

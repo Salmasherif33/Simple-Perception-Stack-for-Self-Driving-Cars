@@ -5,8 +5,13 @@ import cv2 as cv
 import numpy as np
 import glob
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 from edge_detection import canny
 from bird_eye import *
+=======
+from edge_detection import *
+from bird_eye import final_bird
+>>>>>>> 08fcbdee8ccb62e432387059de9ad1d751756e0a
 from window import *
 from lane_detection import *
 from last_overlay import overlay
@@ -33,9 +38,12 @@ def main():
         
         while istrue:
             if (stages == 1):
-                output_img = canny(frame)
-                
-            elif(stages==2):
+                output_img = lane_line_markings(np.copy(frame))
+                result = output_img
+            elif (stages == 2):
+                output_img = canny(frame,s_thresh=(100, 255), l_thresh=(120, 255))
+                result = output_img
+            elif(stages==3):
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
