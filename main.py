@@ -6,7 +6,7 @@ import numpy as np
 import glob
 import matplotlib.pyplot as plt
 from edge_detection import canny
-from bird_eye import *
+from bird_eye import final_bird
 from window import *
 from lane_detection import *
 from last_overlay import overlay
@@ -33,12 +33,9 @@ def main():
         
         while istrue:
             if (stages == 1):
-                output_img = lane_line_markings(np.copy(frame))
-                result = output_img
-            elif (stages == 2):
-                output_img = canny(frame,s_thresh=(100, 255), l_thresh=(120, 255))
-                result = output_img
-            elif(stages==3):
+                output_img = canny(frame)
+                
+            elif(stages==2):
                 output_img = canny(frame)
                 warped,histogram,Minv = final_bird(output_img)
                 left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
@@ -49,7 +46,7 @@ def main():
                 left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
               
                 result = overlay(left_curvem,right_curvem, offset,result,bird_draw,slid_out)
-                result = bird_view_markings(warped)
+                
             #cv.imshow('input_Video',slid_out)        
             cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
