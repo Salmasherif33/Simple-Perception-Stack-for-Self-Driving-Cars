@@ -5,13 +5,8 @@ import cv2 as cv
 import numpy as np
 import glob
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
 from edge_detection import canny
 from bird_eye import *
-=======
-from edge_detection import *
-from bird_eye import final_bird
->>>>>>> 08fcbdee8ccb62e432387059de9ad1d751756e0a
 from window import *
 from lane_detection import *
 from last_overlay import overlay
