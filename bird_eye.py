@@ -25,8 +25,8 @@ def warp(img):
         [
             [padding+30,100],                # Top-left corner
             [padding+30,height -10],           # Bottom-left corner
-            [width - (padding+100), height],   # Bottom-right corner#
-            [width - (padding+100),50]        # Top-right corner
+            [width - (padding+113), height],   # Bottom-right corner#
+            [width - (padding+113),50]        # Top-right corner
         ])
 
 
@@ -60,8 +60,8 @@ def bird_view_markings(img):
         [
             [padding - 90,10],                # Top-left corner
             [padding-90,height -30],           # Bottom-left corner
-            [width - (padding+50), height-30],   # Bottom-right corner#
-            [width - (padding+50),10]        # Top-right corner
+            [width - (padding+100), height-30],   # Bottom-right corner#
+            [width - (padding+100),10]        # Top-right corner
         ])
 
  
