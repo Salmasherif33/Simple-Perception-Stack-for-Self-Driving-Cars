@@ -9,11 +9,17 @@ import matplotlib.image as mpimg
 def lane_line_markings(img):
     src = np.float32(
         [
-            (572, 454),  # Top-left corner
-            (250, 660),  # Bottom-left corner
-            (1100, 684),  # Bottom-right corner
-            (734, 454)  # Top-right corner
+            (580, 470),
+            (220,720),
+            (1110, 720),
+            (722, 470)
+         
         ])
+
+    """   (572, 454),  # Top-left corner
+            (330, 660),  # Bottom-left corner
+            (1100, 684),  # Bottom-right corner
+            (690, 454)  # Top-right corner """
 
     detected_plot = cv.polylines(np.copy(img), np.int32([
         src]), True, (147, 20, 255), 3)
