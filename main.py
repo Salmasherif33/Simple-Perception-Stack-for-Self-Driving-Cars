@@ -13,6 +13,7 @@ from last_overlay import *
 from calculations import *
 from phase2.load import *
 from phase2.features import *
+from phase2.windows import *
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
     try:
@@ -88,16 +89,20 @@ def main():
 
 
         ## PHASE II ##
-        cars,not_cars = load(train_path)
-        cv2.imshow("not car",not_cars[833])
+        #cars,not_cars = load(train_path)
+       
+        #hogged_image, features = extract_features(cars ,0)
+
+        #cv.imshow('hogged',hogged_image)
 
 
-
-
-    
-
-
-        #cv.imshow('Output Image',result)
+        windows_list =  windows(img)
+        print(windows_list[10])
+        windowss  = sliding_windows(img)
+        
+        result = vis_windows(img,windowss)
+        
+        cv.imshow('Output Image',result)
         cv.waitKey(0)
     
 

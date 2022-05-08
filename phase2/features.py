@@ -1,22 +1,9 @@
-
-
 from cv2 import resize
-from load import *
 from skimage.feature import hog
 import numpy as np
 import matplotlib.image as mpimg
 
 
-def feature(imgs):
-    ##TODO  loop on each image in the list
-    ##TODO  append to a feature vector ([spatial features] , [Histogram features])
-    ##TODO  call get_hog_features function for each img -> append it's return vector to the previously mentioned vector .
-    ##TODO  append that vector to a list of feature vectors
-    ##TODO  return the mentioned list 
-
-    ##NB : cspace is always RGB ....... vis = False ..... SIZE IS ALWAYS (64, 64, 3)
-
-    return
 
 
 def resizing_image(img, size):
@@ -45,9 +32,9 @@ def calc_histogram(img, nbins):
 
 def bin_spatial(image, size=(64, 64)):
     #use ravel to make it 1D, why ? :(
-    color1 = cv2.resize(image[:,:,0], size).ravel()
-    color2 = cv2.resize(image[:,:,1], size).ravel() 
-    color3 = cv2.resize(image[:,:,2], size).ravel() 
+    color1 = resize(image[:,:,0], size).ravel()
+    color2 = resize(image[:,:,1], size).ravel() 
+    color3 = resize(image[:,:,2], size).ravel() 
     return np.hstack((color1, color2, color3))
 
 #extract_features() function combines

@@ -5,7 +5,7 @@ import cv2
 def load(path):
     cars = []
     not_cars =[]
-    print (path + "vehicles/GTI_Far/*.png")
+
     for img in glob.glob(path + "/vehicles/GTI_Far/*.png"):
         GTI= cv2.imread(img)
         cars.append(GTI)
