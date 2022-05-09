@@ -56,3 +56,17 @@ def extract_features(imgs, hog_channel):
         features.append(np.concatenate(img_featurs))
 
     return  hogged_image, features
+
+def extract_features_single(img, hog_channel):
+    img_featurs = []
+    #image = mpimg.imread(img)
+    feature_image = np.copy(img)
+    spatial_features = bin_spatial(feature_image, size=(64, 64))
+    img_featurs.append(spatial_features)
+    # Apply color_hist()
+    hist_features = calc_histogram(feature_image, nbins=32)
+    img_featurs.append(hist_features)
+    hogged_feature, hogged_image = get_hog_features(feature_image, 9)
+    img_featurs.append(hogged_feature)
+    return   np.concatenate(img_featurs)
+

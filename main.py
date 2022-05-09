@@ -14,6 +14,7 @@ from calculations import *
 from phase2.load import *
 from phase2.features import *
 from phase2.windows import *
+from phase2.svm import *
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
     try:
@@ -89,24 +90,27 @@ def main():
 
 
         ## PHASE II ##
-        #cars,not_cars = load(train_path)
-       
-        #hogged_image, features = extract_features(cars ,0)
-
-        #cv.imshow('hogged',hogged_image)
-
-
-        windows_list =  windows(img)
-        print(windows_list[10])
-        windowss  = sliding_windows(img)
+        cars,not_cars = load(train_path)
         
-        result = vis_windows(img,windowss)
+        hogged_car, car_features = extract_features(cars[4000:5000],0 )
         
+        hogged_not_car, not_car_features = extract_features(not_cars[0:1000],0 )
+
+        
+
+        windows_list  = sliding_windows(img)
+        y_start_stop = [800, 1000] 
+        overlap = 0.5
+        windows_list = sliding_windows(img)
+        #windows_list = slidingWindow(img )                   
+        svc , X_scaler = train(car_features,not_car_features)
+        hot_windows = search_windows(img, windows_list, svc, X_scaler)
+
+        result = vis_windows(img,hot_windows)
+    
         cv.imshow('Output Image',result)
         cv.waitKey(0)
-    
-
-
+        
 
 
 if __name__== "__main__":
