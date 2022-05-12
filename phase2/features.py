@@ -41,7 +41,8 @@ def bin_spatial(image, size=(64, 64)):
 #the features from HOG along with spatial features and color histogram features 
 def extract_features(imgs, hog_channel):
     features = []
-    for img in imgs:
+    for file in imgs:
+        img = mpimg.imread(file)
         img_featurs = []
         #image = mpimg.imread(img)
         feature_image = np.copy(img)

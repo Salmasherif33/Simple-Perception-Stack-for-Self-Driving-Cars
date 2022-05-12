@@ -15,6 +15,8 @@ from phase2.load import *
 from phase2.features import *
 from phase2.windows import *
 from phase2.svm import *
+from YOLO.detect import *
+
 def main():
     #usage: type(vid/img) PATH(relative or absolute)
     try:
@@ -38,6 +40,10 @@ def main():
         size = (width,height)
         out = cv.VideoWriter(destination,cv.VideoWriter_fourcc(*"mp4v"), 25, size)  
         img_array = []
+        load_path = "/home/anto/Downloads/"
+        net ,classes ,output_layers,colors = load(load_path, load_path ,load_path)
+
+
         while istrue:
             output_img = canny(frame)
             warped,histogram,Minv = final_bird(output_img)
@@ -57,18 +63,19 @@ def main():
                 break
 
             out.write(result)
-
-            #cv.imshow('input_Video',slid_out)        
-            #cv.imshow('Output_Video',result)
+            ## CALL DETECT FNs ##
+                    
+            cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
-            #if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
-            #    break
+            if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
+                break
         out.release()
 
 
 
     elif (type_ == "img"):
         img = cv.imread(path)
+        '''
         #img = canny(img)
         #output_img = lane_line_markings(img)
         #output_img,histogram = final_bird(img)
@@ -86,24 +93,26 @@ def main():
             result = last_overlay(left_curvem,right_curvem, offset,result)
         else:
             print("ERROR:No valid debug_mode was given")
-
+        '''
 
 
         ## PHASE II ##
+        img = img.astype(np.float32)/255.0
+
         cars,not_cars = load(train_path)
         
         hogged_car, car_features = extract_features(cars[4000:5000],0 )
         
-        hogged_not_car, not_car_features = extract_features(not_cars[0:1000],0 )
+        hogged_not_car, not_car_features = extract_features(not_cars[1000:1500],0 )
 
         
 
-        windows_list  = sliding_windows(img)
-        y_start_stop = [800, 1000] 
-        overlap = 0.5
+        
         windows_list = sliding_windows(img)
-        #windows_list = slidingWindow(img )                   
+              
         svc , X_scaler = train(car_features,not_car_features)
+        print(X_scaler)
+
         hot_windows = search_windows(img, windows_list, svc, X_scaler)
 
         result = vis_windows(img,hot_windows)

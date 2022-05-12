@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 def train(car_features , notcar_features):
 
-
+    
     X = np.vstack((car_features, notcar_features)).astype(np.float64)
 
     # Fchange X to be a column scaler
@@ -26,5 +26,6 @@ def train(car_features , notcar_features):
     # train linear SVC
     svc = LinearSVC()
     svc.fit(X_train, y_train)
-    
+    acc = round(svc.score(X_test, y_test), 4)
+
     return svc , X_scaler
