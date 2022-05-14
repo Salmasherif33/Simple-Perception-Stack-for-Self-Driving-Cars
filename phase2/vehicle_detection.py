@@ -58,7 +58,7 @@ def detect_cars(img,y_start, y_end, scale, X_scaler, svc):
           
             # Get color features
             spatial_features = bin_spatial(subimg, size=(32,32))
-            hist_features = calc_histogram(subimg, nbins=64)
+            hist_features = calc_histogram(subimg, nbins=32)
 
             # Scale features and make a prediction
             test_features = X_scaler.transform(np.hstack((spatial_features, hist_features, hog_features)).reshape(1, -1))    
