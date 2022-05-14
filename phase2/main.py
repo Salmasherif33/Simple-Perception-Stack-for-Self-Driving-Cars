@@ -35,9 +35,9 @@ def main ():
         ## PHASE II ##
         cars,not_cars = load(train_path)
         
-        hogged_car, car_features = extract_features(cars[4000:5000],0 )
+        hogged_car, car_features = extract_features(cars[4000:5000],'ALL' )
         
-        hogged_not_car, not_car_features = extract_features(not_cars[0:1000],0 )
+        hogged_not_car, not_car_features = extract_features(not_cars[0:1000],'ALL' )
 
         
 
@@ -50,17 +50,19 @@ def main ():
         #hot_windows = search_windows(np.copy(img), windows_list, svc, X_scaler)
 
         
-        all_hot_win = detect_cars(np.copy(img.astype(np.float32)/255), 360, 660, 1.2, X_scaler, svc)
+        all_hot_win = detect_cars(np.copy(img.astype(np.float32)/255), 400, 656, 1.5, X_scaler, svc)
         
         result = vis_windows(np.copy(img),all_hot_win)
        
-        heat = np.zeros_like(np.copy(img)[:,:,0]).astype(float)
+        heat = np.zeros_like(np.copy(img)[:,:,0])
         # Add heat to each box in box list
         heat = add_heat(heat, all_hot_win)
-        # Visualize the heatmap when displaying    
-        heatmap = np.clip(heat, 0, 255)
+       
         # Apply threshold to help remove false positives
-        heat = apply_threshold(heat, 1)
+        heat = apply_threshold(heat, 1)  
+        # Visualize the heatmap when displaying  
+        heatmap = np.clip(heat, 0, 255)
+       
         labels = label(heatmap)
         draw_img = draw_labeled_bboxes(np.copy(img), labels)
         cv.imshow('Output Image',draw_img)

@@ -36,7 +36,7 @@ def search_windows(img, windows, classifier, scaler):
     for window in windows:
         ## get the smaller window img
         test_img = cv.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64,64))  
-        features = extract_features_single(test_img,0)
+        features = extract_features_single(test_img,'ALL')
         '''
         We have to change the features list to be arr in order to reshape it
         '''
