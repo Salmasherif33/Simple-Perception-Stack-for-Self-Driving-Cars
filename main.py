@@ -75,12 +75,12 @@ def main():
             windows_list = sliding_windows(img)
             hot_windows = search_windows(img, windows_list, svc, X_scaler)
             result = vis_windows(frame,hot_windows)
-            #cv.imshow('Output_Video',result)
-            result2 = cv.cvtColor(result, cv.COLOR_RGB2BGR)
-            out.write(result2)
+            cv.imshow('Output_Video',result)
+            
+            
             istrue, frame = capture.read()      #istrue = true if there is a frame
-            #if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
-            #    break
+            if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
+                break
         out.release()
 
 
@@ -135,7 +135,7 @@ def main():
         
         windows_list = sliding_windows(img)
         hot_windows = search_windows(img, windows_list, svc, X_scaler)
-        result = vis_windows(img,hot_windows)
+        result = vis_windows(cv.cvtColor(img, cv.COLOR_RGB2BGR),hot_windows)
         
         cv.imshow('Output Image',result)
         cv.waitKey(0)
