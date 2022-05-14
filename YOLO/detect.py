@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 yolov3_cfg_url = 'https://github.com/arunponnusamy/object-detection-opencv/raw/master/yolov3.cfg'
 yolov3_weights_url = 'https://pjreddie.com/media/files/yolov3.weights'
 
-def load(weights_path , cfg_path ,coco_path):
+def load_yolo(weights_path , cfg_path ,coco_path):
     weights_total = weights_path + "yolov3.weights"
     cfg_total = cfg_path +  "yolov3.cfg"
     coco_total = coco_path + "coco.names"
@@ -119,4 +119,4 @@ def vis(img,class_ids, boxes, confidences,classes,colors):
         cv2.rectangle(img, (bbox[i][0],bbox[i][1]), (bbox[i][2],bbox[i][3]), color, 2)
 
         cv2.putText(img, label, (bbox[i][0],bbox[i][1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-    return img
+    return bbox,labels

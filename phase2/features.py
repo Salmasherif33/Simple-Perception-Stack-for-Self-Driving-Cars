@@ -1,4 +1,5 @@
 from cv2 import resize
+import cv2 as cv
 from skimage.feature import hog
 import numpy as np
 import matplotlib.image as mpimg
@@ -39,6 +40,7 @@ def extract_features(imgs, hog_channel):
     features = []
     for file in imgs:
         img = mpimg.imread(file)
+        img = cv.cvtColor(img, cv.COLOR_RGB2YCrCb)
         img_featurs = []
         #image = mpimg.imread(img)
         feature_image = np.copy(img)
@@ -67,6 +69,7 @@ def extract_features(imgs, hog_channel):
 def extract_features_single(img, hog_channel):
     img_featurs = []
     #image = mpimg.imread(img)
+    img = cv.cvtColor(img, cv.COLOR_RGB2YCrCb)
     feature_image = np.copy(img)
     spatial_features = bin_spatial(feature_image, size=(32, 32))
     img_featurs.append(spatial_features)
