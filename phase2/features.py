@@ -5,13 +5,9 @@ import matplotlib.image as mpimg
 
 
 
-
-def resizing_image(img, size):
-    res_img = resize(img, size)
-
-def get_hog_features(img, orientations):
+def get_hog_features(img, orientations, feat_vec):
     features, hog_image = hog(img, orientations, pixels_per_cell=(8, 8),
-    cells_per_block=(2, 2), transform_sqrt=False, visualize=True,feature_vector=True,channel_axis=-1)
+    cells_per_block=(2, 2), transform_sqrt=False, visualize=True,feature_vector=feat_vec)
 
     return features, hog_image
 
@@ -21,9 +17,9 @@ def get_hog_features(img, orientations):
 #  while the hist() gives graphical representation of the dataset.
 
 def calc_histogram(img, nbins):
-    ch1,bins = np.histogram(img[:,:,0], nbins)
-    ch2,bins = np.histogram(img[:,:,1], nbins)
-    ch3,bins = np.histogram(img[:,:,2], nbins)
+    ch1,bins = np.histogram(img[:,:,0], nbins, range=(0,256))
+    ch2,bins = np.histogram(img[:,:,1], nbins,range=(0,256))
+    ch3,bins = np.histogram(img[:,:,2], nbins,range=(0,256))
 
     # Concatenate the histograms into a single feature vector
     histogram_features = np.concatenate((ch1, ch2, ch3))
@@ -46,13 +42,23 @@ def extract_features(imgs, hog_channel):
         img_featurs = []
         #image = mpimg.imread(img)
         feature_image = np.copy(img)
-        spatial_features = bin_spatial(feature_image, size=(64, 64))
+        spatial_features = bin_spatial(feature_image, size=(32, 32))
         img_featurs.append(spatial_features)
         # Apply color_hist()
-        hist_features = calc_histogram(feature_image, nbins=32)
+        hist_features = calc_histogram(feature_image, nbins=64)
         img_featurs.append(hist_features)
-        hogged_feature, hogged_image = get_hog_features(feature_image, 9)
-        img_featurs.append(hogged_feature)
+
+        if hog_channel == 'ALL':
+            hog_features = []
+            for ch in range(feature_image.shape[2]):
+                hogged_feature, hogged_image = get_hog_features(feature_image[:,:,ch], 9, True)
+                hog_features.append(hogged_feature)
+            hog_features = np.ravel(hog_features)
+            img_featurs.append(hog_features)
+
+        if hog_channel == 0:
+            hogged_feature, hogged_image = get_hog_features(feature_image[:,:,0], 9, True)
+            img_featurs.append(hogged_feature)
     
         features.append(np.concatenate(img_featurs))
 
@@ -62,12 +68,22 @@ def extract_features_single(img, hog_channel):
     img_featurs = []
     #image = mpimg.imread(img)
     feature_image = np.copy(img)
-    spatial_features = bin_spatial(feature_image, size=(64, 64))
+    spatial_features = bin_spatial(feature_image, size=(32, 32))
     img_featurs.append(spatial_features)
     # Apply color_hist()
-    hist_features = calc_histogram(feature_image, nbins=32)
+    hist_features = calc_histogram(feature_image, nbins=64)
     img_featurs.append(hist_features)
-    hogged_feature, hogged_image = get_hog_features(feature_image, 9)
-    img_featurs.append(hogged_feature)
+    if hog_channel == 'ALL':
+        hog_features = []
+        for ch in range(feature_image.shape[2]):
+            hogged_feature, hogged_image = get_hog_features(feature_image[:,:,ch], 9, True)
+            hog_features.append(hogged_feature)
+        hog_features = np.ravel(hog_features)
+        img_featurs.append(hog_features)
+
+    if hog_channel == 0:
+        hogged_feature, hogged_image = get_hog_features(feature_image[:,:,0], 9, True)
+        img_featurs.append(hogged_feature)
+
     return   np.concatenate(img_featurs)
 

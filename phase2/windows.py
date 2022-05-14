@@ -3,11 +3,11 @@ import cv2 as cv
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from phase2.features import *
+from features import *
 def sliding_windows(img,overlap=(0.5, 0.5)):
     window_list = []     
     xspan = img.shape[1] -0
-    yspan = img.shape[0] - 64*4
+    yspan = 660 - 360
 
     ##compute number of windows in x&y directions
     x_windows = np.int(xspan/np.int((64,64)[0]*(0.5))) - 1
@@ -16,8 +16,8 @@ def sliding_windows(img,overlap=(0.5, 0.5)):
     for ys in range(y_windows):
         for xs in range(x_windows):
             # Calculate x&y of top left corner of the rectangle
-            i = xs*np.int((64,64)[0]*(0.5)) 
-            j = ys*np.int((64,64)[1]*(0.5)) + 64*3
+            i = xs*np.int((64,64)[0]*(0.5))
+            j = ys*np.int((64,64)[1]*(0.5)) + 360
     
             window_list.append(((i, j), (i+ (64,64)[0],(j + (64,64)[1]))))
     return window_list
@@ -49,3 +49,5 @@ def search_windows(img, windows, classifier, scaler):
             hot_windows.append(window)
 
     return hot_windows
+
+        
