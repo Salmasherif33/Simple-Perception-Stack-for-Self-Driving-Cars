@@ -54,28 +54,28 @@ def main():
             lane_markings = lane_line_markings(frame)
             left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
 
+            # YOLO
+            class_ids , boxes , confidences  = detect(frame,net,output_layers)
+            bbox,labels  =  vis(frame,class_ids , boxes, confidences,classes,colors)
             if(mode == 1):
-                result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings)
+                result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
             elif (mode ==0):
-                result = last_overlay(left_curvem,right_curvem, offset,result)
+                result = last_overlay(left_curvem,right_curvem, offset,result,bbox,labels,colors)
             else:
                 print("ERROR:No valid debug_mode was given")
                 break
-
             out.write(result)
-            ## CALL DETECT FNs ##
-                    
-            cv.imshow('Output_Video',result)
+            #cv.imshow('Output_Video',result)
             istrue, frame = capture.read()      #istrue = true if there is a frame
-            if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
-                break
+            #if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
+            #    break
         out.release()
 
 
 
     elif (type_ == "img"):
         img = cv.imread(path)
-        '''
+
         #img = canny(img)
         #output_img = lane_line_markings(img)
         #output_img,histogram = final_bird(img)
@@ -87,16 +87,23 @@ def main():
         offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
         lane_markings = lane_line_markings(img)
         left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
+        ##YOLO
+        '''
+        load_path = "/home/anto/Downloads/"
+        net ,classes ,output_layers,colors = load(load_path, load_path ,load_path)
+        class_ids , boxes , confidences  = detect(img,net,output_layers)
+        bbox,labels  =  vis(img,class_ids , boxes, confidences,classes,colors)
+        '''
         if(mode == 1):
-            result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings)
+            result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
         elif (mode ==0):
-            result = last_overlay(left_curvem,right_curvem, offset,result)
+            result = last_overlay(left_curvem,right_curvem, offset,result,bbox,labels,colors)
         else:
             print("ERROR:No valid debug_mode was given")
-        '''
 
 
         ## PHASE II ##
+        
         img = img.astype(np.float32)/255.0
 
         cars,not_cars = load(train_path)
@@ -104,7 +111,7 @@ def main():
         hogged_car, car_features = extract_features(cars[4000:5000],0 )
         
         hogged_not_car, not_car_features = extract_features(not_cars[1000:1500],0 )
-
+        
         
 
         
@@ -116,7 +123,7 @@ def main():
         hot_windows = search_windows(img, windows_list, svc, X_scaler)
 
         result = vis_windows(img,hot_windows)
-    
+        
         cv.imshow('Output Image',result)
         cv.waitKey(0)
         

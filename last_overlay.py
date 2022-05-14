@@ -13,7 +13,7 @@ def rescale(img,scale):
 
     return cv.resize(img,dimensions, interpolation=cv.INTER_AREA)
 
-def last_overlay(left_curvem,right_curvem, text2 , img ):
+def last_overlay(left_curvem,right_curvem, text2 , img , bbox , labels ,colors):
     origin1 = (50,50)
     origin2 = (50,100)
     font = cv.FONT_HERSHEY_SIMPLEX
@@ -25,11 +25,15 @@ def last_overlay(left_curvem,right_curvem, text2 , img ):
 
     img = cv.putText(img , text1 , origin1, font , fonts , color , thick)
     img = cv.putText(img , text2 , origin2, font , fonts , color , thick)
-    
+    for i, label in enumerate(labels):
+        color = colors[i]
+        cv.rectangle(img, (bbox[i][0],bbox[i][1]), (bbox[i][2],bbox[i][3]), color, 2)
+        cv.putText(img, label, (bbox[i][0],bbox[i][1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
     return img
 
 
-def debug_overlay(img ,bird_draw,slid_out,warped,lane_markings):
+def debug_overlay(img ,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors):
     bird_draw = rescale(bird_draw, 0.2)
     x_offset= int(img.shape[0]) + 40
     y_offset=5
@@ -55,5 +59,9 @@ def debug_overlay(img ,bird_draw,slid_out,warped,lane_markings):
     y_offset=150
     img[y_offset:y_offset+lane_markings.shape[0], x_offset:x_offset+lane_markings.shape[1]] = lane_markings
 
+    for i, label in enumerate(labels):
+        color = colors[i]
+        cv.rectangle(img, (bbox[i][0],bbox[i][1]), (bbox[i][2],bbox[i][3]), color, 2)
+        cv.putText(img, label, (bbox[i][0],bbox[i][1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     return img
