@@ -1,4 +1,5 @@
 from cv2 import resize
+import cv2
 from skimage.feature import hog
 import numpy as np
 import matplotlib.image as mpimg
@@ -26,7 +27,7 @@ def calc_histogram(img, nbins):
     # Return the individual histograms, bin_centers and feature vector
     return histogram_features
 
-def bin_spatial(image, size=(64, 64)):
+def bin_spatial(image, size=(32, 32)):
     #use ravel to make it 1D, why ? :(
     color1 = resize(image[:,:,0], size).ravel()
     color2 = resize(image[:,:,1], size).ravel() 
@@ -41,11 +42,12 @@ def extract_features(imgs, hog_channel):
         img = mpimg.imread(file)
         img_featurs = []
         #image = mpimg.imread(img)
-        feature_image = np.copy(img)
+        feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
+        #feature_image = np.copy(img)
         spatial_features = bin_spatial(feature_image, size=(32, 32))
         img_featurs.append(spatial_features)
         # Apply color_hist()
-        hist_features = calc_histogram(feature_image, nbins=64)
+        hist_features = calc_histogram(feature_image, nbins=32)
         img_featurs.append(hist_features)
 
         if hog_channel == 'ALL':
@@ -71,7 +73,7 @@ def extract_features_single(img, hog_channel):
     spatial_features = bin_spatial(feature_image, size=(32, 32))
     img_featurs.append(spatial_features)
     # Apply color_hist()
-    hist_features = calc_histogram(feature_image, nbins=64)
+    hist_features = calc_histogram(feature_image, nbins=32)
     img_featurs.append(hist_features)
     if hog_channel == 'ALL':
         hog_features = []
