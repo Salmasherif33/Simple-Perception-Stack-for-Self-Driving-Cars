@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from pickle import dump
 def train(car_features , notcar_features):
 
     
@@ -26,6 +27,12 @@ def train(car_features , notcar_features):
     # train linear SVC
     svc = LinearSVC()
     svc.fit(X_train, y_train)
+    # save the model
+    dump(svc, open('model.pkl', 'wb'))
+    # save the scaler
+    dump(X_scaler, open('scaler.pkl', 'wb'))
+
+
     acc = round(svc.score(X_test, y_test), 4)
 
     return svc , X_scaler

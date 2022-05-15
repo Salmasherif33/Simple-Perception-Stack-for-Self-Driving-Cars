@@ -2,7 +2,7 @@ import os
 import glob
 import cv2
 
-def load(path):
+def load_imgs(path):
     cars = []
     not_cars =[]
     basedir= path + "/vehicles/"
