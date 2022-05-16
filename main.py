@@ -41,15 +41,20 @@ def main():
         size = (width,height)
         out = cv.VideoWriter(destination,cv.VideoWriter_fourcc(*"mp4v"), 25, size)  
         img_array = []
-        #load_path = "/home/anto/Downloads/"
-        #net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
-        svc = load(open('model.pkl', 'rb'))
-        X_scaler = load(open('scaler.pkl', 'rb'))
-
+        load_path = "/home/anto/Downloads/"
+        net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
+        '''
+        img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+        img = img.astype(np.float32)/255.0
+        windows_list = sliding_windows(img)
+        '''
+        c = 0
+        
         while istrue:
-            img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            img = img.astype(np.float32)/255.0
-            '''
+            if c % 5 == 0:
+                c+=1
+                istrue, frame = capture.read()
+                continue
             output_img = canny(frame)
             warped,histogram,Minv = final_bird(output_img)
             left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
@@ -58,7 +63,7 @@ def main():
             offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
             lane_markings = lane_line_markings(frame)
             left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
-
+            c+=1
             # YOLO
             class_ids , boxes , confidences  = detect(frame,net,output_layers)
             bbox,labels  =  vis(frame,class_ids , boxes, confidences,classes,colors)
@@ -70,23 +75,25 @@ def main():
                 print("ERROR:No valid debug_mode was given")
                 break
             out.write(result)
+            #cv.imshow('Output_Video',result)
             '''
 
-            windows_list = sliding_windows(img)
+            
             hot_windows = search_windows(img, windows_list, svc, X_scaler)
             result = vis_windows(frame,hot_windows)
+            out.write(result)
             cv.imshow('Output_Video',result)
             
-            
+            '''
             istrue, frame = capture.read()      #istrue = true if there is a frame
-            if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
-                break
+            #if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
+            #    break
         out.release()
 
 
 
     elif (type_ == "img"):
-        img =  mpimg.imread(path)
+        img =  cv.imread(path)
         
         #img = canny(img)
         #output_img = lane_line_markings(img)
@@ -100,7 +107,7 @@ def main():
         lane_markings = lane_line_markings(img)
         left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
         ##YOLO
-        '''
+        
         load_path = "/home/anto/Downloads/"
         net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
         class_ids , boxes , confidences  = detect(img,net,output_layers)
@@ -112,20 +119,20 @@ def main():
             result = last_overlay(left_curvem,right_curvem, offset,result,bbox,labels,colors)
         else:
             print("ERROR:No valid debug_mode was given")
-        '''
+        
 
         ## PHASE II ##
-        
+        '''
         img = img.astype(np.float32)/255.0
         
-        '''
+        
         ## TRAIN SVM MODEL ##
         cars,not_cars = load_imgs(train_path)
         hogged_car, car_features = extract_features(cars[0:4000],'ALL')
         hogged_not_car, not_car_features = extract_features(not_cars[0:4000],'ALL' )
         svc , X_scaler = train(car_features,not_car_features)        
         ##END OF TRAINING
-        '''
+        
         ## LOAD SVM 
         svc = load(open('model.pkl', 'rb'))
         X_scaler = load(open('scaler.pkl', 'rb'))
@@ -136,7 +143,7 @@ def main():
         windows_list = sliding_windows(img)
         hot_windows = search_windows(img, windows_list, svc, X_scaler)
         result = vis_windows(cv.cvtColor(img, cv.COLOR_RGB2BGR),hot_windows)
-        
+        '''
         cv.imshow('Output Image',result)
         cv.waitKey(0)
         
