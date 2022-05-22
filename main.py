@@ -6,6 +6,7 @@ import numpy as np
 import glob
 from pickle import load
 import matplotlib.pyplot as plt
+import time
 from edge_detection import canny
 from bird_eye import final_bird
 from window import *
@@ -39,22 +40,14 @@ def main():
         istrue, frame = capture.read()      #istrue = true if there is a frame
         height, width, layers = frame.shape
         size = (width,height)
-        out = cv.VideoWriter(destination,cv.VideoWriter_fourcc(*"mp4v"), 25, size)  
+        out = cv.VideoWriter(destination,cv.VideoWriter_fourcc(*"mp4v"),22, size)  
         img_array = []
-        load_path = "/home/anto/Downloads/"
+        load_path = ""
         net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
-        '''
-        img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-        img = img.astype(np.float32)/255.0
-        windows_list = sliding_windows(img)
-        '''
         c = 0
-        
+        start_time = time.time()
+
         while istrue:
-            if c % 5 == 0:
-                c+=1
-                istrue, frame = capture.read()
-                continue
             output_img = canny(frame)
             warped,histogram,Minv = final_bird(output_img)
             left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
@@ -89,18 +82,18 @@ def main():
             #if  cv.waitKey(20) & 0xFF == ord('e'):    #exit = e
             #    break
         out.release()
+        print("Video total time =  %s seconds " % (time.time() - start_time))
+
 
 
 
     elif (type_ == "img"):
+        start_time = time.time()
         img =  cv.imread(path)
-        
-        #img = canny(img)
-        #output_img = lane_line_markings(img)
-        #output_img,histogram = final_bird(img)
         output_img = canny(img)
         warped,histogram,Minv = final_bird(output_img)
         left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(img,warped)
+        
         bird_draw = bird_draw_lane(warped,left_fit,right_fit)
         result = draw_lane(img,output_img,left_fit,right_fit,Minv)     
         offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
@@ -108,7 +101,7 @@ def main():
         left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
         ##YOLO
         
-        load_path = "/home/anto/Downloads/"
+        load_path = ""
         net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
         class_ids , boxes , confidences  = detect(img,net,output_layers)
         bbox,labels  =  vis(img,class_ids , boxes, confidences,classes,colors)
@@ -120,30 +113,7 @@ def main():
         else:
             print("ERROR:No valid debug_mode was given")
         
-
-        ## PHASE II ##
-        '''
-        img = img.astype(np.float32)/255.0
-        
-        
-        ## TRAIN SVM MODEL ##
-        cars,not_cars = load_imgs(train_path)
-        hogged_car, car_features = extract_features(cars[0:4000],'ALL')
-        hogged_not_car, not_car_features = extract_features(not_cars[0:4000],'ALL' )
-        svc , X_scaler = train(car_features,not_car_features)        
-        ##END OF TRAINING
-        
-        ## LOAD SVM 
-        svc = load(open('model.pkl', 'rb'))
-        X_scaler = load(open('scaler.pkl', 'rb'))
-        
-        
-
-        
-        windows_list = sliding_windows(img)
-        hot_windows = search_windows(img, windows_list, svc, X_scaler)
-        result = vis_windows(cv.cvtColor(img, cv.COLOR_RGB2BGR),hot_windows)
-        '''
+        print("Image total time =  %s seconds " % (time.time() - start_time))
         cv.imshow('Output Image',result)
         cv.waitKey(0)
         
