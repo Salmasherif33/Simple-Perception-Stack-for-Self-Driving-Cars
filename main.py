@@ -49,7 +49,7 @@ def main():
         while istrue:
             output_img = canny(frame)
             warped,histogram,Minv = final_bird(output_img)
-            left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
+            left_fit,right_fit,left_lane_ends, right_lane_ends, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(frame,warped)
             bird_draw = bird_draw_lane(warped,left_fit,right_fit)
             result = draw_lane(frame,output_img,left_fit,right_fit,Minv)   
             offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
@@ -91,13 +91,14 @@ def main():
         img =  cv.imread(path)
         output_img = canny(img)
         warped,histogram,Minv = final_bird(output_img)
-        left_fit,right_fit,left_lane_ends, right_lane_ends, visualization_data, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(img,warped)
+        left_fit,right_fit,left_lane_ends, right_lane_ends, slid_out, ploty,leftx,lefty,rightx,righty =sliding_window_polyfit(img,warped)
         
         bird_draw = bird_draw_lane(warped,left_fit,right_fit)
         result = draw_lane(img,output_img,left_fit,right_fit,Minv)     
         offset = center(warped , left_fit,right_fit,left_lane_ends,right_lane_ends)
         lane_markings = lane_line_markings(img)
         left_curvem,right_curvem = calculate_curvature(ploty,leftx,lefty,rightx,righty)
+        
         ##YOLO
         
         load_path = ""
@@ -113,7 +114,7 @@ def main():
             print("ERROR:No valid debug_mode was given")
         
         print("Image total time =  %s seconds " % (time.time() - start_time))
-        cv.imwrite(destination,result)
+        cv.imwrite(destination,result)      
         cv.imshow('Output Image',result)
         cv.waitKey(0)
         

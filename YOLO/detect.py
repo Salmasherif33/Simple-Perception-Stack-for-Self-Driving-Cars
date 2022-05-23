@@ -30,7 +30,7 @@ def load_yolo(weights_path , cfg_path ,coco_path):
 def detect(img,net,output_layers):
     scale = 0.00392
     width, height = img.shape[1], img.shape[0]
-    blob = cv2.dnn.blobFromImage(img, scale,(416, 416) , (0, 0, 0), crop=False)
+    blob = cv2.dnn.blobFromImage(img, scale,(416, 416) , (0, 0, 0), crop=False,swapRB = True)
     net.setInput(blob)
     outs = net.forward(output_layers)
     class_ids = []
