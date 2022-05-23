@@ -25,11 +25,10 @@ def main():
         type_ = sys.argv[1]
         path = sys.argv[2]
         destination = sys.argv[3]
-        train_path = sys.argv[4]
-        mode_reduntant = sys.argv[5]
-        mode = int(sys.argv[6])
+        mode_reduntant = sys.argv[4]
+        mode = int(sys.argv[5])
     except:
-        if(len(sys.argv) < 6):
+        if(len(sys.argv) < 5):
             print("USAGE:python3 main.py type(vid/img) PATH outputPATH train_path mode 0/1")
             return 1
 
@@ -61,9 +60,9 @@ def main():
             class_ids , boxes , confidences  = detect(frame,net,output_layers)
             bbox,labels  =  vis(frame,class_ids , boxes, confidences,classes,colors)
             if(mode == 1):
-                result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
+                result = debug_overlay(result,left_curvem,right_curvem,offset,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
             elif (mode ==0):
-                result = last_overlay(left_curvem,right_curvem, offset,result,bbox,labels,colors)
+                result = last_overlay(left_curvem,right_curvem,offset,result,bbox,labels,colors)
             else:
                 print("ERROR:No valid debug_mode was given")
                 break
@@ -107,13 +106,14 @@ def main():
         bbox,labels  =  vis(img,class_ids , boxes, confidences,classes,colors)
         
         if(mode == 1):
-            result = debug_overlay(result,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
+            result = debug_overlay(result,left_curvem,right_curvem,offset,bird_draw,slid_out,warped,lane_markings,bbox,labels,colors)
         elif (mode ==0):
             result = last_overlay(left_curvem,right_curvem, offset,result,bbox,labels,colors)
         else:
             print("ERROR:No valid debug_mode was given")
         
         print("Image total time =  %s seconds " % (time.time() - start_time))
+        cv.imwrite(destination,result)
         cv.imshow('Output Image',result)
         cv.waitKey(0)
         
