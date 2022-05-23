@@ -41,7 +41,7 @@ def main():
         size = (width,height)
         out = cv.VideoWriter(destination,cv.VideoWriter_fourcc(*"mp4v"), 25, size)  
         img_array = []
-        load_path = "/home/anto/Downloads/"
+        load_path = "D:/faculty/image_designPattern/Simple-Perception-Stack-for-Self-Driving-Cars/"
         net ,classes ,output_layers,colors = load_yolo(load_path, load_path ,load_path)
         '''
         img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
