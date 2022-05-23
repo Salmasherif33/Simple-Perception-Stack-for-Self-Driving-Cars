@@ -1,0 +1,4 @@
+*.pkl
+*.names
+*.weights
+*.cfg
